@@ -149,7 +149,7 @@ else {
 			});	
 }
 
-//----------------------------------Fonction Suppression d'un article du panier--------------------------------------------------
+//----------------------------------Fonction 1: Suppression d'un article du panier--------------------------------------------------
 function deleteProduct() {
     let selectSupprimer = document.querySelectorAll(".deleteItem");
     selectSupprimer.forEach((selectSupprimer) => {
@@ -185,7 +185,7 @@ function deleteProduct() {
             }); 
     })
 }
-//----------------------------------Fonction Modifier la quantité d'un article du panier--------------------------------------------------
+//----------------------------------Fonction 2:  Modifier la quantité d'un article du panier--------------------------------------------------
 let messageErrorQuantity = false;
 function ModifyQuantity() {
     // On sélectionne l'élément html (input) dans lequel la quantité est modifiée
@@ -224,7 +224,7 @@ function ModifyQuantity() {
         });
     });
 }
-//----------Fonction calculation du montant total du panier, lors de la modification de la quantité ou de la suppression d'un article-------------
+//----------Fonction 3: Calcul du montant total du panier, lors de la modification de la quantité ou de la suppression d'un article-------------
 function calculationTotalPrice() {
     let newTotalPrice = 0;
     //(1) On fait une boucle sur le addedProducts et dans cette boucle, 
@@ -255,7 +255,7 @@ function calculationtotalQuantity() {
     //On affichage la nouvelle quantité totale de produits dans le html
     document.getElementById("totalQuantity").innerText = newtotalQuantity;
 }
-//-------------------------------Fonction Calcul du montant total du panier, au chargement de la page Panier.html-------------------------------
+//-------------------------------Fonction 4:  Calcul du montant total du panier, au chargement de la page Panier.html-------------------------------
 function totalProductsPrice (){
     // Calcul du prix total de chaque produit en multipliant la quantité par le prix unitaire
     totalProductPriceBasket = quantityProductBasket * priceProductBasket;
@@ -270,13 +270,13 @@ function totals (){
     totalProductsQuantity();
     totalProductsPrice();
 }
-//----------------------Fonction Calcul de la quantité total d'articles dans le panier, au chargement de la page Panier.html-----------------
+//----------------------Fonction 5:  Calcul de la quantité total d'articles dans le panier, au chargement de la page Panier.html-----------------
 function totalProductsQuantity(){
     totalQuantity += parseInt(quantityProductBasket);
     //console.log("Total quantité panier",totalQuantity);
     document.getElementById("totalQuantity").innerText = totalQuantity;
 }
-//----------------------------------Fonction pour afficher la phrase "Le panier est vide !"--------------------------------------------------
+//----------------------------------Fonction 6:  Pour afficher la phrase "Le panier est vide !"--------------------------------------------------
 function messagePanierVide() {
     productsInBasket = 'Le panier est vide !';
     let newH2 = document.createElement('h2');
