@@ -9,10 +9,10 @@ async function searchProduct() {
     			.then((data) => details(data))
    				 .catch((error) => {
      			 console.log(error);
-      			window.alert("Connexion au serveur impossible !");
+      			window.alert("Merci de choisir un produit à la page \'Accueil!'");
     });
 	}
-  //Recharger les détails du produit
+//Recharger les détails du produit
 		function details(data) {
   			if (data != null) {
     		let kanapImg = document.querySelector(".item__img");
@@ -28,14 +28,14 @@ async function searchProduct() {
 
     		kanapSpeech = document.querySelector("#description");
     		kanapSpeech.textContent = data.description;
-  //Boucle pour la couleur
+//Boucle pour la couleur
     	for (let i = 0; i < data.colors.length; i++) {
       		makeChoice(data.colors[i]);
    		 }
   	}
 }
 
-  //Fonction pour le choix de la couleur
+//Fonction pour le choix de la couleur
 		function makeChoice(varChoice) {
   			const varOption = document.createElement("option");
   			varOption.value = varChoice;
@@ -44,7 +44,7 @@ async function searchProduct() {
   			parent.append(varOption);
 }
 
-  //Constante d'ajout de produits
+//Bouton ajout de produits
 
 			const button = document.getElementById("addToCart");
 
@@ -89,7 +89,7 @@ async function searchProduct() {
         		KanapQuantity.value <= 100
       		) {
         		product.quantity = KanapQuantity.value; //On l'ajoute au panier
-        		basket.push(product); //On le l'envoie dans le LocalStorage
+        		basket.push(product); //On l'envoie dans le LocalStorage
       		  } else {  // Si l'article est déjà présent on incrémente la quantité
         		let newQuantity =
           		parseInt(foundProduct.quantity) + parseInt(KanapQuantity.value);
@@ -97,7 +97,7 @@ async function searchProduct() {
       		  }
       			saveBasket(basket);
 				
-			  		if (KanapQuantity.value <=1) {
+			  		if (KanapQuantity.value <=1) {  // Message de confirmation de l'ajout du produit dans le panier
 					alert(
 						`Le canapé ${kanapName.textContent} ${KanapColor.value} a été ajouté en ${KanapQuantity.value} exemplaire à votre panier !`
 						 );
