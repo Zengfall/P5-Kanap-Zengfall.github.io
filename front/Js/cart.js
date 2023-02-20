@@ -12,7 +12,6 @@ let totalQuantity = 0;
 let quantityProductBasket = 0;
 let priceProductBasket = 0;
 let totalProductPriceBasket = 0;
-
 //___________________________________Affichage des produits du LocalStorage__________________________________________________________
 
 //--------------Si le panier est vide (le localStorage est vide ou le tableau qu'il contient est vide), on affiche "Votre panier est vide"------------
