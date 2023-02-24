@@ -1,8 +1,5 @@
 // Appel de l'API pour recupérer les produits
-
-// Ajout des produits sur la page d'accueil
 addProducts();
-//
 async function addProducts() {
     await fetch('http://localhost:3000/api/products')
         .then((res) => res.json())

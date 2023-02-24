@@ -1,30 +1,30 @@
-// Variable qui va contenir les produits ajoutés
+// Variable pour recupérer les produits ajoutés
 let addedProducts= JSON.parse(localStorage.getItem("kanapLs"));
 //Localisation sur la page html des produits
 const productsLocationHtml = document.getElementById("cart__items");
 //Déclaration des variables de la page panier
-let productsInBasket = [];
+let productsInBasket = []; // Array qui va contenir les produits du LS
 // Les variables pour calculer la quantité totale d'articles et le prix total du panier
-let myBasket = [];
+let myBasket = []; //Array des produits de l'API
 const findProducts = 0;
 let totalPrice = 0;  
 let totalQuantity = 0;
 let quantityProductBasket = 0;
 let priceProductBasket = 0;
 let totalProductPriceBasket = 0;
-//___________________________________Affichage des produits du LocalStorage__________________________________________________________
+//Affichage des produits du LocalStorage
 
-//--------------Si le panier est vide (le localStorage est vide ou le tableau qu'il contient est vide), on affiche "Votre panier est vide"------------
+//Si le LS est vide , on affiche "Votre panier est vide"------------
 if(addedProducts === null || addedProducts.length === 0){
     messagePanierVide(); 
-    //Si le client clique quand même sur le bouton commander, on lui rappelle que le panier est vide
+    //Si le client clique sur le bouton commander, on lui rappelle que le panier est vide
     buttonCommander.addEventListener("click", (event)=>{
         alert("Votre panier est vide !");
         event.preventDefault();
     });
 }
 
-//-----------------------------------Si le panier n'est pas vide alors, on affiche le contenu du localStorage-------------------------------------
+//Si le panier n'est pas vide alors, on affiche les produits contenus dans le LS
 
 else {
 
@@ -32,67 +32,65 @@ else {
         .then(response => response.json())
         .then(data => {
             myBasket = data;
-            // on récupère la couleur, la quantité et l'id des produits contenus dans le localstorage et on les met dans des variables
+                // Recupèration de la couleur, la quantité et l'id des produits contenus dans le LS 
             for(let i = 0; i < addedProducts.length; i++){
                 let colorProductBasket = addedProducts[i].chosenProductColor;
                 let idProductBasket = addedProducts[i].chosenProductId;
                 quantityProductBasket = addedProducts[i].quantity
 				;
-                //on ne récupère que les données des canapés dont les _id (de l'api) correspondent aux id dans le localStorage
+                //Recupèration des canapés dont les _id (de l'api) correspondent aux id dans le LS
                 const productsInBasket = data.find((element) => element._id === idProductBasket);
-                    //console.log(addedProducts);
-                // Récupération du prix de chaque produit que l'on met dans une variable priceProductBasket
+                // Récupération du prix de chaque produit 
                 priceProductBasket = productsInBasket.price;
-				//console.log(productsInBasket.price);
-                //---------------On cré les éléments html manquants de la page cart.html, dans la <section id="cart__items">...--------------------
-                //-----------------------------et on y insère les infos du localstorage----------------------------------------------------------
+                //Création des éléments html manquants de la page cart.html, dans la <section id="cart__items">...
+                //Insertion des infos du LS
 				let newProduct = document.createElement('article');
                 newProduct.setAttribute("class","cart__item");
                 newProduct.setAttribute("data-id",`${idProductBasket}`);
                 newProduct.setAttribute("data-color",`${colorProductBasket}`);
                 productsLocationHtml.appendChild(newProduct);
-                    //----------------------------------Création de la div avec pour classe cart__item__img----------------------------------------------
+                //Création de la div avec pour classe cart__item__img
                     let newDivImg = document.createElement('div');
                     newDivImg.setAttribute("class", "cart__item__img");
                     newProduct.appendChild(newDivImg);
-                        //--------------------------Création de la balise image qui contiendra la photo de chaque canapé----------------------------------
+                        //Création de la balise image qui contiendra la photo de chaque canapé
                         let newImg = document.createElement('img');
                         newImg.setAttribute("src", productsInBasket.imageUrl);
                         newImg.setAttribute("alt", productsInBasket.altTxt);
                         newDivImg.appendChild(newImg);
-                    //--------------------------------Création de la div avec pour classe cart__item__content-----------------------------------------
-                    let newDivContent = document.createElement('div');
-                    newDivContent.setAttribute("class", "cart__item__content");
-                    newProduct.appendChild(newDivContent);   
-                        //----------------------------Création de la div avec pour classe cart__item__content__description--------------------------------
+                        //Création de la div avec pour classe cart__item__content
+                        let newDivContent = document.createElement('div');
+                        newDivContent.setAttribute("class", "cart__item__content");
+                        newProduct.appendChild(newDivContent);   
+                        //Création de la div avec pour classe cart__item__content__description
                         let newDivContentDescription = document.createElement('div');
                         newDivContentDescription.setAttribute("class", "cart__item__content__description");
                         newDivContent.appendChild(newDivContentDescription);
-                            //-------------------Création d'une balise titre h2 qui indique le nom du produit --------------
+                            //Création d'une balise titre h2 qui indique le nom du produit
                             let newH2 = document.createElement('h2');
                             newH2.innerText = productsInBasket.name;
                             newDivContentDescription.appendChild(newH2);
-                            //--------------------Création d'une balise p qui indique la couleur choisie ------------------------
+                            //Création d'une balise p qui indique la couleur choisie
                             let newPColor = document.createElement('p');
                             newPColor.innerText = colorProductBasket;
                             newDivContentDescription.appendChild(newPColor);
-                            //--------------------------Création d'une balise p qui indique le prix du canapé-------------------------------------
+                            //Création d'une balise p qui indique le prix du canapé
                             let newPPrice = document.createElement('p');
                             newPPrice.innerText = productsInBasket.price + " €";
                             newDivContentDescription.appendChild(newPPrice);
-                        //------------------------Création de la div avec pour classe cart__item__content__settings------------------------------
+                        //Création de la div avec pour classe cart__item__content__settings
                         let newDivContentSettings = document.createElement('div');
                         newDivContentSettings.setAttribute("class", "cart__item__content__settings");
                         newDivContent.appendChild(newDivContentSettings);
-                            //--------------------Création de la div avec pour classe cart__item__content__settings__quantity--------------------
+                            //Création de la div avec pour classe cart__item__content__settings__quantity
                             let newDivContentSettingsQuantity = document.createElement('div');
                             newDivContentSettingsQuantity.setAttribute("class", "cart__item__content__settings__quantity");
                             newDivContentSettings.appendChild(newDivContentSettingsQuantity);
-                                //-----------------------------Création d'une balise p qui indique le texte "Quantité :"-------------------------------
+                                //Création d'une balise p qui indique le texte "Quantité :"
                                 let newPQuantity = document.createElement('p');
                                 newPQuantity.innerText = "Quantité :";
                                 newDivContentSettingsQuantity.appendChild(newPQuantity);
-                                //------------Création d'une balise input avec la classe "itemQuantity" qui permet de modifier la quantité-------
+                                //Création d'une balise input avec la classe "itemQuantity" qui permet de modifier la quantité
                                 let newPInput = document.createElement('input');
                                 newPInput.setAttribute("type", "number");
                                 newPInput.setAttribute("class", "itemQuantity");
@@ -101,27 +99,27 @@ else {
                                 newPInput.setAttribute("max", "100");
                                 newPInput.setAttribute("value", `${quantityProductBasket}`);
                                 newDivContentSettingsQuantity.appendChild(newPInput);
-                            //------------------Création de la div avec pour classe cart__item__content__settings__delete-------------------------
+                            //Création de la div avec pour classe cart__item__content__settings__delete
                             let newDivContentSettingsDelete = document.createElement('div');
                             newDivContentSettingsDelete.setAttribute("class", "cart__item__content__settings__delete");
                             newDivContentSettings.appendChild(newDivContentSettingsDelete);
-                                //------------------------Création d'une balise p qui indique le prix du canapé-----------------------------------
+                                //Création d'une balise p qui indique le prix du canapé
                                 let newPDelete = document.createElement('p');
                                 newPDelete.setAttribute("class", "deleteItem");
                                 newPDelete.innerText = "Supprimer";
                                 newDivContentSettingsDelete.appendChild(newPDelete);
-                //_____________________________________________Fin Ajout Balises html____________________________________________________________
-				 //__Appel de la fonction pour calculer la qtité totale de produits & le prix total du panier au chargement de la page Panier.html______
+                                       //Fin Ajout Balises html
+				 //Appel de la fonction pour calculer la quantité totale de produits & le prix total du panier au chargement de la page
 				 totals();
 				}//for
-				//___________________________________________Appel de la fonction Supprimer un produit__________________________________________________________
+				//Appel de la fonction Supprimer un produit
 				deleteProduct();
-				//_____________________________________Appel de le fonction Modifier la quantité d'un produit____________________________________________________
+				//Appel de le fonction Modifier la quantité d'un produit
 				ModifyQuantity(); 
 			});	
 }
 
-//----------------------------------Fonction 1: Suppression d'un article du panier--------------------------------------------------
+//Fonction 1: Suppression d'un article du panier
 function deleteProduct() {
     let selectSupprimer = document.querySelectorAll(".deleteItem");
     selectSupprimer.forEach((selectSupprimer) => {
@@ -129,34 +127,33 @@ function deleteProduct() {
                 event.preventDefault();
                 // On pointe le parent hiérarchique <article> du lien "supprimer"
                 let myArticle = selectSupprimer.closest('article');
-                // on filtre les éléments du localStorage pour ne garder que ceux qui sont différents de l'élément qu'on supprime
+                // On filtre les éléments du LS à garder
                 addedProducts = addedProducts.filter
                 ( element => element.chosenProductId !== myArticle.dataset.id || element.chosenProductColor !== myArticle.dataset.color );
-                // On met à jour le localStorage
+                // On met à jour le LS
                 localStorage.setItem("kanapLs", JSON.stringify(addedProducts));                
-                //Alerte produit supprimé
+                // Alerte produit supprimé
                 alert("Ce produit va être supprimé du panier.");                            
                 // On supprime physiquement la balise <article> du produit que l'on supprime depuis son parent, si elle existe
                 if (myArticle.parentNode) {
                     myArticle.parentNode.removeChild(myArticle);
                 }
-                //-----Si, du coup, le panier est vide (le localStorage est vide ou le tableau qu'il contient est vide),...
-                //...on affiche "Le panier est vide"-------------------------------------------------------------------
+                //Si le panier est vide, on affiche "Le panier est vide
                 if(addedProducts === null || addedProducts.length === 0){
                     messagePanierVide();
                 }
                 else{
-                // Et, on calculatione la quantité et le prix total du panier
+                //Sinon, on calcule la quantité et le prix total du panier
                 calculationTotalQuantity();
                 calculationTotalPrice();
                 }
             }); 
     })
 }
-//----------------------------------Fonction 2:  Modifier la quantité d'un article du panier--------------------------------------------------
+//Fonction 2: Modifier la quantité d'un article du panier
 let messageErrorQuantity = false;
 function ModifyQuantity() {
-    // On sélectionne l'élément html (input) dans lequel la quantité est modifiée
+    // On sélectionne l'élément html (input) sur lequel la quantité est modifiée
     let ModifyQuantity = document.querySelectorAll(".itemQuantity");
     ModifyQuantity.forEach((item) => {
         //On écoute le changement sur l'input "itemQuantity"
@@ -165,11 +162,10 @@ function ModifyQuantity() {
             choiceQuantity = Number(item.value);
             // On pointe le parent hiérarchique <article> de l'input "itemQuantity"
             let myArticle = item.closest('article');
-            // On récupère dans le localStorage l'élément (même id et même couleur) dont on veut modifier la quantité
+            // On récupère dans le LS l'élément (même id et même couleur) dont on veut modifier la quantité
             let selectMyArticleInLocalStorage = addedProducts.find
             ( element => element.chosenProductId === myArticle.dataset.id && element.chosenProductColor === myArticle.dataset.color );
-            // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier,...
-            //...on met à jour la quantité dans le localStorage et le DOM
+            // Si la quantité est ok, on met à jour la quantité dans le LS et le DOM
             if(choiceQuantity > 0 && choiceQuantity <= 100 && Number.isInteger(choiceQuantity)){
                 parseChoiceQuantity = parseInt(choiceQuantity);
                 selectMyArticleInLocalStorage.quantity = parseChoiceQuantity;
@@ -179,7 +175,7 @@ function ModifyQuantity() {
                 calculationTotalPrice();
                 messageErrorQuantity = false;
             }
-            // Sinon, on remet dans le DOM la quantité indiquée dans le localStorage et on indique un message d'erreur
+            // Sinon, on indique un message d'erreur
             else{
                 item.value = selectMyArticleInLocalStorage.quantity;
                 messageErrorQuantity = true;
@@ -190,7 +186,7 @@ function ModifyQuantity() {
         });
     });
 }
-//----------Fonction 3: Calcul du montant total du panier, lors de la modification de la quantité ou de la suppression d'un article-------------
+//Fonction 3: Calcul du montant total du panier, lors de la modification de la quantité ou de la suppression d'un article
 function calculationTotalPrice() {
     let newTotalPrice = 0;
     //(1) On fait une boucle sur le addedProducts et dans cette boucle, 
@@ -204,41 +200,39 @@ function calculationTotalPrice() {
             const newTotalProductPriceBasket = findProducts.price * quantityProductsLocalStorage;
             newTotalPrice += newTotalProductPriceBasket;
         }
-    //On affichage le nouveau prix total du panier dans le html
+    //On affiche le nouveau prix total du panier dans le html
     document.getElementById("totalPrice").innerText = newTotalPrice;
     } 
 }
-//---Fonction calcul de la quantité totale d'articles dans le panier, lors de la modification de la quantité ou de la suppression d'un article---
+//Fonction 4 calcul de la quantité totale d'articles dans le panier, lors de la modification de la quantité ou de la suppression d'un article
 function calculationTotalQuantity() {
     let newtotalQuantity = 0;
     for (const item of addedProducts) {
-        //On calcul le nombre de quantité total de produits dans le localStorage
+        //On calcule le nombre de quantité total de produits dans le LS
         newtotalQuantity += parseInt(item.quantity);
     }
-    //On affichage la nouvelle quantité totale de produits dans le html
+    //On affiche la nouvelle quantité totale de produits dans le html
     document.getElementById("totalQuantity").innerText = newtotalQuantity;
 }
-//----------------------Fonction 4:  Calcul de la quantité total d'articles dans le panier, au chargement de la page Panier.html-----------------
+//Fonction 5:  Calcul de la quantité totale d'articles dans le panier, au chargement de la page Panier
 function totalProductsQuantity(){
     totalQuantity += parseInt(quantityProductBasket);
-    //console.log(totalQuantity);
     document.getElementById("totalQuantity").innerText = totalQuantity;
 }
-//-------------------------------Fonction 5:  Calcul du montant total du panier, au chargement de la page Panier.html-------------------------------
+//Fonction 6:  Calcul du montant total du panier, au chargement de la page Panier
 function totalProductsPrice (){
     // Calcul du prix total de chaque produit en multipliant la quantité par le prix unitaire
     totalProductPriceBasket = quantityProductBasket * priceProductBasket;
     // Calcul du prix total du panier
     totalPrice += totalProductPriceBasket;
-    //console.log("Total prix panier",totalPrice);
     document.getElementById("totalPrice").innerText = totalPrice; 
     }
-//Fonction pour calculer la quantité totale de produits & le prix total du panier au chargement de la page Panier.html 
+//Fonction 7 pour calculer la quantité totale de produits & le prix total du panier au chargement de la page Panier
 function totals (){
     totalProductsQuantity();
     totalProductsPrice();
 }
-//----------------------------------Fonction 6:  Pour afficher la phrase "Le panier est vide !"--------------------------------------------------
+//Fonction 8:  Pour afficher la phrase "Le panier est vide !"
 function messagePanierVide() {
     productsInBasket = 'Votre panier est vide !';
     let newH2 = document.createElement('h2');
@@ -248,9 +242,8 @@ function messagePanierVide() {
     document.getElementById("totalQuantity").innerText = 0;
     document.getElementById("totalPrice").innerText = 0;
 }
-
-//___________________________________Contrôle des infos avec Regex et Récupération des données du formulaire____________________________________
-        //Les variables à utiliser pour la validation du panier-
+//Contrôle des infos avec Regex
+        //Les variables à utiliser pour la validation du panier
         const buttonCommander = document.getElementById("order");
         let errorFormulaireFirstName = true;
         let errorFormulaireLastName = true;
@@ -273,7 +266,7 @@ function messagePanierVide() {
         let checkValueAddress;
         let checkValueCity;
         let checkValueEmail; 
-        // Ecoute du contenu du champ "prénom", Vérification du prénom et affichage d'un message si celui-ci n'est pas correct
+        //Ecoute du contenu du champ "prénom", Vérification du prénom et affichage d'un message si celui-ci n'est pas correct
         inputFirstName.addEventListener('change', function() {
             let firstNameErrorMsg = inputFirstName.nextElementSibling;
             checkValueFirstName = textRegex.test(inputFirstName.value);
@@ -286,7 +279,7 @@ function messagePanierVide() {
                 errorFormulaireFirstName = true;
             }
         });
-        // Ecoute du contenu du champ "nom", Vérification du nom et affichage d'un message si celui-ci n'est pas correct
+        // Ecoute le contenu du champ "nom", Vérification du nom et affichage d'un message si celui-ci n'est pas correct
         inputLastName.addEventListener('change', function() {
             let lastNameErrorMsg = inputLastName.nextElementSibling;
             checkValueLastName = textRegex.test(inputLastName.value);
@@ -299,7 +292,7 @@ function messagePanierVide() {
                 errorFormulaireLastName = true;
             }
         });
-        // Ecoute du contenu du champ "adresse", Vérification de l'adresse et affichage d'un message si celle-ci n'est pas correcte
+        // Ecoute le contenu du champ "adresse", Vérification de l'adresse et affichage d'un message si celle-ci n'est pas correcte
         inputAddress.addEventListener('change', function() {
             let addressErrorMsg = inputAddress.nextElementSibling;
             checkValueAddress = addressRegex.test(inputAddress.value);
@@ -312,7 +305,7 @@ function messagePanierVide() {
                 errorFormulaireAddress = true;
             }
         });
-        // Ecoute du contenu du champ "ville", Vérification de la ville et affichage d'un message si celle-ci n'est pas correcte
+        // Ecoute le contenu du champ "ville", Vérification de la ville et affichage d'un message si celle-ci n'est pas correcte
         inputCity.addEventListener('change', function() {
             let cityErrorMsg = inputCity.nextElementSibling;
             checkValueCity = textRegex.test(inputCity.value);
@@ -324,7 +317,7 @@ function messagePanierVide() {
                 errorFormulaireCity = true;
             }
         });
-        // Ecoute du contenu du champ "email", Vérification de l'email et affichage d'un message si celui-ci n'est pas correct
+        // Ecoute le contenu du champ "email", Vérification de l'email et affichage d'un message si celui-ci n'est pas correct
         inputEmail.addEventListener('change', function() {
             let emailErrorMsg = inputEmail.nextElementSibling;
             checkValueEmail = emailRegex.test(inputEmail.value);
@@ -339,14 +332,12 @@ function messagePanierVide() {
         });
         //Ecoute du bouton Commander 
         buttonCommander.addEventListener("click", (event)=>{
-        event.preventDefault();// Empêche le rechargement de la page
+        event.preventDefault();
         if(addedProducts === null || addedProducts.length === 0){ 
               alert("Votre panier est vide !");
         }
         else{
-        //__________________________________________Gestion du formulaire de contact et validation de la commande________________________________________
-          
-          // On vérifie que tous les champs sont bien renseignés, sinon on indique un message à l'utilisateur
+        //Gestion du formulaire de contact et validation de la commande 
           // On vérifie qu'aucun champ n'est vide
           if(!inputFirstName.value || !inputLastName.value || !inputAddress.value || !inputCity.value || !inputEmail.value){
               alert("Vous devez renseigner tous les champs !");
@@ -359,12 +350,12 @@ function messagePanierVide() {
               event.preventDefault();
           }
           else{
-              //Récupération des id des produits du panier, dans le localStorage
+          //Récupération des id des produits du panier, dans le LS
               let idProducts = [];
               for (let l = 0; l<addedProducts.length;l++) {
                   idProducts.push(addedProducts[l].chosenProductId);
               }
-              // On cré un objet dans lequel on met les infos "Contact" et les infos "Produits du panier" (l'id)
+              // Création d'un objet dans lequel on met les infos "Contact" et les infos "Produits du panier" (l'id)
               const order = {
                   contact: {
                       firstName: inputFirstName.value,
@@ -375,7 +366,6 @@ function messagePanierVide() {
                   },
                   products: idProducts,
               } 
-                 //console.log(order);
               // On indique la méthode d'envoi des données
               const options = {
                   method: 'POST',
@@ -398,7 +388,7 @@ function messagePanierVide() {
                   console.log("Erreur Fetch product.js", err);
                   alert ("Un problème a été rencontré lors de l'envoi du formulaire.");
               });
-              //----------------------------------------------On vide le localStorage---------------------------------------------------------------
+              //----------------------------------------------On vide le LS---------------------------------------------------------------
               localStorage.clear();
           }; 
         }
