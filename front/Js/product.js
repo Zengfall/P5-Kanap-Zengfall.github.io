@@ -1,6 +1,5 @@
 //ID du produit
 let kanapId = new URLSearchParams(window.location.search).get("id");
-
 //Rechercher un produit par son ID
 searchProduct();
 async function searchProduct() {
@@ -21,8 +20,7 @@ async function searchProduct() {
     		kanapName = document.querySelector("#product_name");
 			
     		kanapName.textContent = data.name;
-			console.log(kanapName.textContent);
-
+		
     		kanapPrice = document.querySelector("#price");
     		kanapPrice.textContent = data.price;
 
@@ -34,7 +32,6 @@ async function searchProduct() {
    		 }
   	}
 }
-
 //Fonction pour le choix de la couleur
 		function makeChoice(varChoice) {
   			const varOption = document.createElement("option");
@@ -43,7 +40,6 @@ async function searchProduct() {
   			const parent = document.querySelector("#colors");
   			parent.append(varOption);
 }
-
 //Bouton ajout de produits
 
 			const button = document.getElementById("addToCart");
@@ -53,26 +49,23 @@ async function searchProduct() {
 	 {
     		const KanapQuantity = document.querySelector("#quantity");
     		const KanapColor = document.querySelector("#colors");
-        // Les valeurs de l'article mis dans le panier
+        // Les caractéristiques de l'article mis dans le panier
     	    let basket = {
       		chosenProductId: kanapId,
       		chosenProductColor: KanapColor.value,
       		chosenProductQuantity: KanapQuantity,
       		chosenProductName: kanapName,
    		 };
-
-        // Fonction 1: Recupération du panier dans le Localstorage
+        // Fonction 1: Recupération du panier dans le LS
     	function getBasket() {
-      		let basket = JSON.parse(localStorage.getItem("kanapLs")); // Transforme les données en tableau dans le localStorage
+      		let basket = JSON.parse(localStorage.getItem("kanapLs")); // Transforme les données en tableau dans le LS
       		if (basket === null) {
-        	return []; //Si le LocalStorage est vide, on crée un tableau vide représentant un panier vide
+        	return []; //Si le LS est vide, on crée un tableau vide représentant un panier vide
       	}   else {
         	return basket; // Si le panier existe
       		}
     	}
-
   		//Fonction 2:  Ajout du produit
-
     	function addBasket(product) {
       		let basket = getBasket();
       		let foundProduct = basket.find(
@@ -89,7 +82,7 @@ async function searchProduct() {
         		KanapQuantity.value <= 100
       		) {
         		product.quantity = KanapQuantity.value; //On l'ajoute au panier
-        		basket.push(product); //On l'envoie dans le LocalStorage
+        		basket.push(product); //On l'envoie dans le LS
       		  } else {  // Si l'article est déjà présent on incrémente la quantité
         		let newQuantity =
           		parseInt(foundProduct.quantity) + parseInt(KanapQuantity.value);
@@ -108,7 +101,6 @@ async function searchProduct() {
 							 );
 					}
     	}
-
   		//Fonction 3: Sauvegarde du panier
     	function saveBasket(basket) {
       		localStorage.setItem("kanapLs", JSON.stringify(basket));
@@ -121,7 +113,7 @@ async function searchProduct() {
     		else if (KanapQuantity.value <= 0 || KanapQuantity.value > 100) {
       			alert("Veuillez sélectionner une quantité correcte, SVP");
     		} else {
-  		//Si tout est OK, on envoie le panier au LocalStorage
+  		//Si tout est OK, on envoie le panier au LS
       				addBasket(basket);
     			   }
  	});
